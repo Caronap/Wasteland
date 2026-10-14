@@ -1,0 +1,210 @@
+{
+  "id": "wasteland_world",
+  "type": "world",
+  "origin": {"x": 0, "y": 0, "z": 0},
+  "bounds": {"min": {"x": -812, "y": 0, "z": -812}, "max": {"x": 812, "y": 36, "z": 812}},
+  "children": [
+    {
+      "id": "weather_rain",
+      "type": "system",
+      "position": "global",
+      "rules": ["exposed players take rain damage", "raincoat blocks rain damage", "covered players are safe"]
+    },
+    {
+      "id": "sample_city",
+      "type": "city",
+      "center": {"x": 0, "y": 1, "z": 0},
+      "bounds": {"min": {"x": -80, "y": 0, "z": -80}, "max": {"x": 80, "y": 36, "z": 80}},
+      "roads": [
+        {"id": "main_ns", "bounds": {"min": {"x": -7, "y": 1, "z": -76}, "max": {"x": 6, "y": 1, "z": 76}}, "widthUnits": 2},
+        {"id": "main_ew", "bounds": {"min": {"x": -76, "y": 1, "z": -6}, "max": {"x": 76, "y": 1, "z": 5}}, "widthUnits": 2}
+      ],
+      "children": [
+        {
+          "id": "cbd",
+          "type": "zone",
+          "center": {"x": 0, "y": 1, "z": 0},
+          "radius": 24,
+          "structures": [
+            {
+              "id": "starter_shelter",
+              "type": "safehouse",
+              "position": {"x": 10, "y": 1, "z": 54},
+              "spawn": {"x": 0, "y": 3, "z": 8},
+              "rules": ["roof blocks rain", "no starter hazards", "contains workbench and starter crates"],
+              "starterItems": ["Rust Axe", "Stone Pickaxe", "Field Shovel", "Scrap Bow", "Arrow x16", "Throwing Spear", "Canned Food x2", "Raincoat", "Bandage x2", "Handheld Map", "Storm Torch x6"]
+            },
+            {"id": "first_ring_nw", "type": "district", "position": {"x": -43, "y": 1, "z": -49}, "grid": {"x": 5, "z": 7}, "buildingTypes": ["2x3x8", "1x3x6", "1x1x3"]},
+            {"id": "first_ring_ne", "type": "district", "position": {"x": 8, "y": 1, "z": -49}, "grid": {"x": 5, "z": 7}, "buildingTypes": ["2x3x8", "1x3x6", "1x1x3"]},
+            {"id": "first_ring_sw", "type": "district", "position": {"x": -43, "y": 1, "z": 7}, "grid": {"x": 5, "z": 7}, "buildingTypes": ["2x3x8", "1x3x6", "1x1x3"]},
+            {"id": "first_ring_se", "type": "district", "position": {"x": 8, "y": 1, "z": 7}, "grid": {"x": 5, "z": 7}, "buildingTypes": ["2x3x8", "1x3x6", "1x1x3"]}
+          ],
+          "loot": ["loot_crate_cbd"]
+        },
+        {
+          "id": "residential",
+          "type": "zone",
+          "center": {"x": 0, "y": 1, "z": 0},
+          "radius": 45,
+          "structures": [
+            {"id": "residential_hut_a", "type": "hut", "position": {"x": 28, "y": 1, "z": -18}, "size": {"x": 7, "y": 7, "z": 6}},
+            {"id": "residential_hut_b", "type": "hut", "position": {"x": -36, "y": 1, "z": 18}, "size": {"x": 7, "y": 7, "z": 6}},
+            {"id": "residential_apartment_a", "type": "building", "position": {"x": 27, "y": 1, "z": 15}, "size": {"x": 10, "y": 5, "z": 8}},
+            {"id": "residential_apartment_b", "type": "building", "position": {"x": -45, "y": 1, "z": -24}, "size": {"x": 9, "y": 4, "z": 7}}
+          ],
+          "loot": ["loot_crate_residential"]
+        },
+        {
+          "id": "factory",
+          "type": "zone",
+          "center": {"x": 0, "y": 1, "z": 0},
+          "radius": 65,
+          "structures": [
+            {"id": "factory_complex_west", "type": "factory", "position": {"x": -68, "y": 1, "z": -28}, "bounds": {"min": {"x": -70, "y": 1, "z": -30}, "max": {"x": -34, "y": 16, "z": -14}}},
+            {"id": "factory_complex_east", "type": "factory", "position": {"x": 44, "y": 1, "z": 34}, "bounds": {"min": {"x": 42, "y": 1, "z": 32}, "max": {"x": 78, "y": 16, "z": 48}}}
+          ],
+          "loot": ["loot_crate_factory"],
+          "entities": [
+            {"id": "bear_factory_west", "type": "bear", "position": {"x": -56, "y": 1, "z": -18}, "spawnChance": 0.65},
+            {"id": "bear_factory_east", "type": "bear", "position": {"x": 56, "y": 1, "z": 42}, "spawnChance": 0.65}
+          ]
+        },
+        {
+          "id": "scene_type_samples",
+          "type": "scene_set",
+          "structures": [
+            {
+              "id": "north_scenic_landmark",
+              "type": "scenic",
+              "position": {"x": 0, "y": 1, "z": -56},
+              "rules": ["fixed landmark", "no loot", "no required interaction"]
+            },
+            {
+              "id": "east_resource_market",
+              "type": "resource",
+              "position": {"x": 44, "y": 1, "z": -8},
+              "loot": [
+                "loot_crate_residential",
+                "loot_crate_cbd",
+                "loot_crate_factory",
+                "shelf_supply_food",
+                "shelf_supply_parts",
+                "shelf_supply_industrial"
+              ],
+              "rules": ["right-click shelf supplies to collect once"]
+            },
+            {
+              "id": "west_interactive_depot",
+              "type": "interactive",
+              "position": {"x": -28, "y": 1, "z": 44},
+              "triggers": ["scene_terminal opens shutter", "spawns cbd and factory crates", "advances terminal quest"]
+            }
+          ]
+        },
+        {
+          "id": "city_edge",
+          "type": "zone",
+          "center": {"x": 0, "y": 1, "z": 0},
+          "radius": 80,
+          "vegetation": {
+            "innerCityTreeChance": 0.08,
+            "outerCityTreeChance": "0.84-0.88 near city, chunk forest to radius 800",
+            "dirtyWaterPuddles": "very sparse puddles only",
+            "rules": [
+              "city exterior is dense forest",
+              "trees grow 2-3 blocks taller",
+              "roads and buildings block tree placement",
+              "building walls seed glow fungus more often than forest ground"
+            ]
+          },
+          "structures": [
+            {"id": "edge_farm", "type": "farm", "bounds": {"min": {"x": -72, "y": 1, "z": -8}, "max": {"x": -56, "y": 1, "z": 8}}},
+            {"id": "edge_ruin", "type": "ruin", "position": {"x": 58, "y": 1, "z": -56}, "size": {"x": 8, "y": 4, "z": 7}},
+            {"id": "edge_hut", "type": "hut", "position": {"x": -70, "y": 1, "z": 48}, "size": {"x": 7, "y": 3, "z": 6}}
+          ],
+          "entities": [
+            {"id": "bear_edge_guaranteed", "type": "bear", "position": {"x": 70, "y": 1, "z": -64}, "spawnChance": 1.0},
+            {"id": "dog_spawn", "type": "dog", "position": {"x": 2, "y": 1, "z": 2}},
+            {"id": "rabbit_spawn_a", "type": "rabbit", "position": {"x": -2, "y": 1, "z": 2}},
+            {"id": "rabbit_spawn_b", "type": "rabbit", "position": {"x": 5, "y": 1, "z": 1}}
+          ]
+        }
+      ],
+      "rules": ["outer band is dense forest with very sparse dirty-water puddles", "storm cloud covers city and forest until escape radius"]
+    },
+    {
+      "id": "cloud_forest_escape",
+      "type": "world_rule",
+      "position": "city and forest canopy",
+      "bounds": {"min": {"x": -800, "y": 1, "z": -800}, "max": {"x": 800, "y": 27, "z": 800}},
+      "route": {
+        "id": "south_glowing_sign_route",
+        "type": "guidance",
+        "nodes": ["story_sign", "torch", "glow_fungus"],
+        "waypoints": [
+          {"x": 0, "y": 2, "z": 24},
+          {"x": 0, "y": 2, "z": 72},
+          {"x": 0, "y": 2, "z": 112},
+          {"x": 0, "y": 2, "z": 220},
+          {"x": 0, "y": 2, "z": 360},
+          {"x": 0, "y": 2, "z": 520},
+          {"x": 0, "y": 2, "z": 680},
+          {"x": 0, "y": 2, "z": 792},
+          {"x": 0, "y": 2, "z": 808}
+        ]
+      },
+      "rules": [
+        "forest radius is ten times the city radius",
+        "storm cloud nodes block sun above the city and forest",
+        "leaving the forest and cloud radius triggers victory",
+        "storm torches are starter loot, crate loot, and workbench craftable",
+        "glowing wooden story signs guide the player south through the rainforest"
+      ]
+    },
+    {
+      "id": "building_hazards",
+      "type": "system",
+      "position": "covered player interiors",
+      "rules": ["covered interiors can spawn falling brick debris", "debris damages players on impact", "non-bedrock floors can crumble under players"]
+    },
+    {
+      "id": "projectiles",
+      "type": "system",
+      "position": "runtime entities",
+      "children": [
+        {"id": "arrow_projectile", "type": "entity", "rules": ["velocity-aligned mesh", "sticks into surfaces"]},
+        {"id": "spear_projectile", "type": "entity", "rules": ["velocity-aligned mesh", "sticks then drops spear item"]}
+      ]
+    },
+    {
+      "id": "survival_progression",
+      "type": "system",
+      "position": "player runtime",
+      "rules": [
+        "main quest chain advances from gathering to depot terminal without jump training",
+        "left HUD shows the unified task tree",
+        "task notice boards open detailed objectives",
+        "creature deaths drop meat, hide, pelts, and factory parts",
+        "workbench crafts bandages, maps, shelter kits, salvage cart kits, and storm torches"
+      ],
+      "children": [
+        {"id": "player_hp_hud", "type": "hud", "rules": ["shows HP bar and raincoat state"]},
+        {"id": "quest_hud", "type": "hud", "rules": ["shows unified task tree with done, active, and locked states"]},
+        {"id": "task_notice_board", "type": "node", "rules": ["right click opens detailed task tree and current hints"]},
+        {"id": "handheld_map", "type": "ui", "rules": ["opens city map with player marker and key locations"]}
+      ]
+    },
+    {
+      "id": "player_built_shelter",
+      "type": "buildable",
+      "position": "clear dry grass patch",
+      "rules": ["shelter kit places roof, floor, hint marker, and workbench", "roof blocks rain"]
+    },
+    {
+      "id": "salvage_cart",
+      "type": "vehicle",
+      "position": "player placed entity",
+      "rules": ["right-click to drive", "W/S move", "A/D turn", "sneak dismounts"]
+    }
+  ]
+}

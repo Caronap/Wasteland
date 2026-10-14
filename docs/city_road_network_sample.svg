@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="920" viewBox="0 0 980 920">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e8; }
+      .road { fill: #4e5963; }
+      .district { fill: #efe3cc; stroke: #2e3238; stroke-width: 3; }
+      .grid { stroke: #b8ad98; stroke-width: 1; }
+      .b238 { fill: #24364a; stroke: #101820; stroke-width: 2; }
+      .b136 { fill: #5b7f95; stroke: #1f3d4d; stroke-width: 2; }
+      .b113 { fill: #c88d45; stroke: #815327; stroke-width: 2; }
+      .label { font-family: "Segoe UI", Arial, sans-serif; font-size: 20px; fill: #20242a; }
+      .small { font-family: "Segoe UI", Arial, sans-serif; font-size: 14px; fill: #20242a; }
+      .tiny { font-family: "Segoe UI", Arial, sans-serif; font-size: 11px; fill: #ffffff; font-weight: 700; }
+      .road-label { font-family: "Segoe UI", Arial, sans-serif; font-size: 18px; fill: #ffffff; }
+      .note { font-family: "Segoe UI", Arial, sans-serif; font-size: 16px; fill: #3b3f45; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="980" height="920"/>
+
+  <!-- One planning unit = one pharmacy length/width unit. Unit size = 44 px. -->
+  <!-- Four first-ring districts: each 5 x 7 units. Cross roads are 2 units wide. -->
+  <g id="roads">
+    <rect class="road" x="366" y="2" width="88" height="880" rx="8"/>
+    <rect class="road" x="58" y="398" width="704" height="88" rx="8"/>
+    <text class="road-label" x="382" y="54">Vertical road, width 2</text>
+    <text class="road-label" x="586" y="450">Horizontal road, width 2</text>
+  </g>
+
+  <g id="districts">
+    <!-- NW district grid -->
+    <rect class="district" x="146" y="90" width="220" height="308"/>
+    <text class="label" x="156" y="80">NW 5x7</text>
+    <line class="grid" x1="190" y1="90" x2="190" y2="398"/>
+    <line class="grid" x1="234" y1="90" x2="234" y2="398"/>
+    <line class="grid" x1="278" y1="90" x2="278" y2="398"/>
+    <line class="grid" x1="322" y1="90" x2="322" y2="398"/>
+    <line class="grid" x1="146" y1="134" x2="366" y2="134"/>
+    <line class="grid" x1="146" y1="178" x2="366" y2="178"/>
+    <line class="grid" x1="146" y1="222" x2="366" y2="222"/>
+    <line class="grid" x1="146" y1="266" x2="366" y2="266"/>
+    <line class="grid" x1="146" y1="310" x2="366" y2="310"/>
+    <line class="grid" x1="146" y1="354" x2="366" y2="354"/>
+    <rect class="b238" x="148" y="92" width="84" height="128"/><text class="tiny" x="158" y="158">2x3x8</text>
+    <rect class="b136" x="280" y="92" width="40" height="128"/><text class="tiny" x="286" y="158">1x3x6</text>
+    <rect class="b136" x="148" y="224" width="40" height="128"/><text class="tiny" x="154" y="290">1x3x6</text>
+    <rect class="b113" x="236" y="224" width="40" height="40"/><text class="tiny" x="244" y="249">1x1x3</text>
+    <rect class="b113" x="324" y="268" width="40" height="40"/><text class="tiny" x="332" y="293">1x1x3</text>
+    <rect class="b113" x="236" y="356" width="40" height="40"/><text class="tiny" x="244" y="381">1x1x3</text>
+
+    <!-- NE district grid -->
+    <rect class="district" x="454" y="90" width="220" height="308"/>
+    <text class="label" x="464" y="80">NE 5x7</text>
+    <line class="grid" x1="498" y1="90" x2="498" y2="398"/>
+    <line class="grid" x1="542" y1="90" x2="542" y2="398"/>
+    <line class="grid" x1="586" y1="90" x2="586" y2="398"/>
+    <line class="grid" x1="630" y1="90" x2="630" y2="398"/>
+    <line class="grid" x1="454" y1="134" x2="674" y2="134"/>
+    <line class="grid" x1="454" y1="178" x2="674" y2="178"/>
+    <line class="grid" x1="454" y1="222" x2="674" y2="222"/>
+    <line class="grid" x1="454" y1="266" x2="674" y2="266"/>
+    <line class="grid" x1="454" y1="310" x2="674" y2="310"/>
+    <line class="grid" x1="454" y1="354" x2="674" y2="354"/>
+    <rect class="b238" x="588" y="92" width="84" height="128"/><text class="tiny" x="598" y="158">2x3x8</text>
+    <rect class="b136" x="456" y="136" width="40" height="128"/><text class="tiny" x="462" y="202">1x3x6</text>
+    <rect class="b136" x="500" y="268" width="40" height="128"/><text class="tiny" x="506" y="334">1x3x6</text>
+    <rect class="b113" x="544" y="224" width="40" height="40"/><text class="tiny" x="552" y="249">1x1x3</text>
+    <rect class="b113" x="632" y="268" width="40" height="40"/><text class="tiny" x="640" y="293">1x1x3</text>
+    <rect class="b113" x="456" y="356" width="40" height="40"/><text class="tiny" x="464" y="381">1x1x3</text>
+
+    <!-- SW district grid -->
+    <rect class="district" x="146" y="486" width="220" height="308"/>
+    <text class="label" x="156" y="824">SW 5x7</text>
+    <line class="grid" x1="190" y1="486" x2="190" y2="794"/>
+    <line class="grid" x1="234" y1="486" x2="234" y2="794"/>
+    <line class="grid" x1="278" y1="486" x2="278" y2="794"/>
+    <line class="grid" x1="322" y1="486" x2="322" y2="794"/>
+    <line class="grid" x1="146" y1="530" x2="366" y2="530"/>
+    <line class="grid" x1="146" y1="574" x2="366" y2="574"/>
+    <line class="grid" x1="146" y1="618" x2="366" y2="618"/>
+    <line class="grid" x1="146" y1="662" x2="366" y2="662"/>
+    <line class="grid" x1="146" y1="706" x2="366" y2="706"/>
+    <line class="grid" x1="146" y1="750" x2="366" y2="750"/>
+    <rect class="b238" x="280" y="664" width="84" height="128"/><text class="tiny" x="290" y="730">2x3x8</text>
+    <rect class="b136" x="148" y="488" width="40" height="128"/><text class="tiny" x="154" y="554">1x3x6</text>
+    <rect class="b136" x="236" y="532" width="40" height="128"/><text class="tiny" x="242" y="598">1x3x6</text>
+    <rect class="b113" x="324" y="488" width="40" height="40"/><text class="tiny" x="332" y="513">1x1x3</text>
+    <rect class="b113" x="192" y="664" width="40" height="40"/><text class="tiny" x="200" y="689">1x1x3</text>
+    <rect class="b113" x="148" y="752" width="40" height="40"/><text class="tiny" x="156" y="777">1x1x3</text>
+
+    <!-- SE district grid -->
+    <rect class="district" x="454" y="486" width="220" height="308"/>
+    <text class="label" x="464" y="824">SE 5x7</text>
+    <line class="grid" x1="498" y1="486" x2="498" y2="794"/>
+    <line class="grid" x1="542" y1="486" x2="542" y2="794"/>
+    <line class="grid" x1="586" y1="486" x2="586" y2="794"/>
+    <line class="grid" x1="630" y1="486" x2="630" y2="794"/>
+    <line class="grid" x1="454" y1="530" x2="674" y2="530"/>
+    <line class="grid" x1="454" y1="574" x2="674" y2="574"/>
+    <line class="grid" x1="454" y1="618" x2="674" y2="618"/>
+    <line class="grid" x1="454" y1="662" x2="674" y2="662"/>
+    <line class="grid" x1="454" y1="706" x2="674" y2="706"/>
+    <line class="grid" x1="454" y1="750" x2="674" y2="750"/>
+    <rect class="b238" x="456" y="532" width="84" height="128"/><text class="tiny" x="466" y="598">2x3x8</text>
+    <rect class="b136" x="588" y="488" width="40" height="128"/><text class="tiny" x="594" y="554">1x3x6</text>
+    <rect class="b136" x="632" y="620" width="40" height="128"/><text class="tiny" x="638" y="686">1x3x6</text>
+    <rect class="b113" x="456" y="488" width="40" height="40"/><text class="tiny" x="464" y="513">1x1x3</text>
+    <rect class="b113" x="544" y="708" width="40" height="40"/><text class="tiny" x="552" y="733">1x1x3</text>
+    <rect class="b113" x="588" y="752" width="40" height="40"/><text class="tiny" x="596" y="777">1x1x3</text>
+  </g>
+
+  <g id="center">
+    <circle cx="410" cy="442" r="28" fill="#f4b84b" stroke="#2e3238" stroke-width="3"/>
+    <text class="small" x="388" y="448">Spawn</text>
+  </g>
+
+  <g id="legend">
+    <rect x="720" y="92" width="220" height="250" fill="#ffffff" stroke="#2e3238" stroke-width="2"/>
+    <text class="label" x="738" y="124">Legend</text>
+    <rect x="738" y="146" width="42" height="28" fill="#4e5963"/>
+    <text class="small" x="792" y="166">Road, width 2</text>
+    <rect x="738" y="188" width="44" height="66" fill="#24364a"/>
+    <text class="small" x="792" y="214">2x3x8 large building</text>
+    <text class="small" x="792" y="234">10% generation chance</text>
+    <rect x="738" y="268" width="22" height="66" fill="#5b7f95"/>
+    <text class="small" x="792" y="304">1x3x6 medium building</text>
+    <rect x="852" y="268" width="22" height="22" fill="#c88d45"/>
+    <text class="small" x="792" y="330">1x1x3 small building</text>
+  </g>
+
+  <text class="note" x="102" y="862">Rule: four first-ring districts, each 5x7 units; buildings use their actual footprints.</text>
+  <text class="note" x="102" y="888">This sample places one 2x3x8 large building in each 5x7 district, illustrating a 10% per-district result.</text>
+</svg>

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wasteland Parameter Editor</title>
+  <style>
+    :root {
+      --bg: #171914;
+      --panel: #24271f;
+      --ink: #f1e8c8;
+      --muted: #b9ad86;
+      --line: #5d5437;
+      --accent: #d8a83c;
+      --danger: #b86a48;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 20% 0%, #36311e 0 18%, transparent 42%),
+        linear-gradient(135deg, #11130f, var(--bg));
+      color: var(--ink);
+      font: 15px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    header {
+      padding: 28px 32px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #11130fb8;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      backdrop-filter: blur(10px);
+    }
+    h1 { margin: 0 0 8px; font-size: 28px; letter-spacing: .02em; }
+    p { margin: 0; color: var(--muted); }
+    main { padding: 22px 32px 36px; }
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    button, label.file {
+      border: 1px solid var(--line);
+      background: linear-gradient(#3b3524, #24271f);
+      color: var(--ink);
+      padding: 9px 12px;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    button:hover, label.file:hover { border-color: var(--accent); }
+    input[type=file] { display: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #20231ccc;
+      border: 1px solid var(--line);
+      box-shadow: 0 18px 60px #0008;
+    }
+    th, td {
+      border-bottom: 1px solid #403a29;
+      padding: 10px;
+      vertical-align: top;
+    }
+    th {
+      text-align: left;
+      color: var(--accent);
+      background: #151711;
+      position: sticky;
+      top: 104px;
+      z-index: 1;
+    }
+    td[contenteditable=true] {
+      background: #151711;
+      outline: 1px solid transparent;
+      border-radius: 4px;
+      min-width: 100px;
+    }
+    td[contenteditable=true]:focus { outline-color: var(--accent); }
+    .value { min-width: 360px; white-space: pre-wrap; }
+    .remove { color: #ffd8ca; border-color: #764833; background: #4a261e; }
+    .status { margin-top: 14px; color: var(--muted); }
+    @media (max-width: 800px) {
+      header, main { padding-left: 14px; padding-right: 14px; }
+      table { font-size: 13px; }
+      .value { min-width: 220px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Wasteland Parameter Editor</h1>
+    <p>Edit the table directly. JSON value fields support numbers, strings, objects, and arrays. Browsers cannot silently overwrite local files, so use Export JSON or Export Markdown to save results.</p>
+  </header>
+  <main>
+    <div class="toolbar">
+      <button id="addRow">Add Parameter</button>
+      <button id="reset">Reset Defaults</button>
+      <button id="downloadJson">Export JSON</button>
+      <button id="downloadMd">Export Markdown</button>
+      <button id="copyMd">Copy Markdown</button>
+      <label class="file">Import JSON<input id="importJson" type="file" accept="application/json,.json"></label>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Key</th>
+          <th>Value</th>
+          <th>Notes</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="status" id="status"></div>
+  </main>
+  <script type="application/json" id="defaults">
+{
+  "version": 1,
+  "rows": [
+    {"category":"world","key":"city_rebuild_min_xz","value":-80,"notes":"Sample city clear/rebuild lower X/Z bound"},
+    {"category":"world","key":"city_rebuild_max_xz","value":80,"notes":"Sample city clear/rebuild upper X/Z bound"},
+    {"category":"world","key":"city_rebuild_min_y","value":0,"notes":"Sample city clear/rebuild lower Y bound"},
+    {"category":"world","key":"city_rebuild_max_y","value":36,"notes":"Sample city clear/rebuild upper Y bound"},
+    {"category":"world","key":"spawn_origin","value":{"x":0,"y":4,"z":0},"notes":"Player spawn position"},
+    {"category":"zone","key":"cbd_radius","value":24,"notes":"Commercial center radius"},
+    {"category":"zone","key":"residential_radius","value":45,"notes":"Residential outer radius"},
+    {"category":"zone","key":"factory_radius","value":65,"notes":"Factory outer radius"},
+    {"category":"zone","key":"city_edge_radius","value":80,"notes":"City edge outer radius"},
+    {"category":"building","key":"template_tower_a","value":{"position":{"x":-23,"y":1,"z":-23},"scale":{"x":2,"z":3,"y":8},"size":{"x":14,"y":24,"z":18}},"notes":"CBD bedrock tower"},
+    {"category":"building","key":"factory_complex_west","value":{"position":{"x":-68,"y":1,"z":-28},"bounds":{"min":{"x":-70,"y":1,"z":-30},"max":{"x":-34,"y":16,"z":-14}}},"notes":"West factory complex"},
+    {"category":"creature","key":"bear_factory_spawn_chance","value":0.65,"notes":"Per factory bear spawn probability"},
+    {"category":"creature","key":"bear_edge_guaranteed_position","value":{"x":70,"y":1,"z":-64},"notes":"Guaranteed edge bear spawn"},
+    {"category":"hazard","key":"rain_damage_interval_seconds","value":3,"notes":"Rain damage interval"},
+    {"category":"hazard","key":"interior_debris_chance","value":0.03,"notes":"Chance per hazard tick while covered"},
+    {"category":"hazard","key":"floor_crumble_chance","value":0.01,"notes":"Chance per hazard tick while covered"}
+  ]
+}
+  </script>
+  <script>
+    const storageKey = "wasteland_generation_parameters";
+    const statusEl = document.querySelector("#status");
+    const tbody = document.querySelector("#rows");
+
+    function defaults() {
+      return JSON.parse(document.querySelector("#defaults").textContent);
+    }
+
+    let data = JSON.parse(localStorage.getItem(storageKey) || "null") || defaults();
+
+    function formatValue(value) {
+      return typeof value === "string" ? value : JSON.stringify(value);
+    }
+
+    function parseValue(text) {
+      const trimmed = text.trim();
+      if (trimmed === "") return "";
+      try { return JSON.parse(trimmed); } catch (_) { return trimmed; }
+    }
+
+    function saveLocal() {
+      localStorage.setItem(storageKey, JSON.stringify(data));
+      statusEl.textContent = "Saved to browser local storage.";
+    }
+
+    function syncFromTable() {
+      data.rows = [...tbody.querySelectorAll("tr")].map(row => ({
+        category: row.children[0].textContent.trim(),
+        key: row.children[1].textContent.trim(),
+        value: parseValue(row.children[2].textContent),
+        notes: row.children[3].textContent.trim()
+      }));
+      saveLocal();
+    }
+
+    function render() {
+      tbody.innerHTML = "";
+      data.rows.forEach((row, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td contenteditable="true">${row.category ?? ""}</td>
+          <td contenteditable="true">${row.key ?? ""}</td>
+          <td class="value" contenteditable="true">${formatValue(row.value)}</td>
+          <td contenteditable="true">${row.notes ?? ""}</td>
+          <td><button class="remove" data-index="${index}">Remove</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function toMarkdown() {
+      syncFromTable();
+      const lines = ["# Generation Parameters", "", "| Category | Key | Value | Notes |", "|---|---|---|---|"];
+      data.rows.forEach(row => {
+        const value = formatValue(row.value).replace(/\|/g, "\\|");
+        lines.push(`| ${row.category} | ${row.key} | \`${value}\` | ${row.notes} |`);
+      });
+      return lines.join("\n");
+    }
+
+    function download(name, text, type) {
+      const blob = new Blob([text], {type});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = name;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    tbody.addEventListener("input", syncFromTable);
+    tbody.addEventListener("click", event => {
+      if (!event.target.matches(".remove")) return;
+      syncFromTable();
+      data.rows.splice(Number(event.target.dataset.index), 1);
+      saveLocal();
+      render();
+    });
+
+    document.querySelector("#addRow").onclick = () => {
+      syncFromTable();
+      data.rows.push({category: "custom", key: "new_parameter", value: 0, notes: ""});
+      saveLocal();
+      render();
+    };
+    document.querySelector("#reset").onclick = () => {
+      data = defaults();
+      saveLocal();
+      render();
+    };
+    document.querySelector("#downloadJson").onclick = () => {
+      syncFromTable();
+      download("generation_parameters.json", JSON.stringify(data, null, 2), "application/json");
+    };
+    document.querySelector("#downloadMd").onclick = () => {
+      download("generation_parameters.md", toMarkdown(), "text/markdown");
+    };
+    document.querySelector("#copyMd").onclick = async () => {
+      await navigator.clipboard.writeText(toMarkdown());
+      statusEl.textContent = "Markdown copied.";
+    };
+    document.querySelector("#importJson").onchange = async event => {
+      const file = event.target.files[0];
+      if (!file) return;
+      data = JSON.parse(await file.text());
+      if (!Array.isArray(data.rows)) throw new Error("JSON must contain rows array.");
+      saveLocal();
+      render();
+    };
+
+    render();
+    statusEl.textContent = "Parameters loaded.";
+  </script>
+</body>
+</html>

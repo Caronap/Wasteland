@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Markdown to DOCX</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f3;
+      --panel: #ffffff;
+      --ink: #20242a;
+      --muted: #66707a;
+      --line: #d8ded6;
+      --accent: #2f7d5a;
+      --accent-dark: #235f45;
+      --code: #f1eee5;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+    main {
+      width: min(1120px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 28px 0;
+    }
+    header {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: 0;
+    }
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .workspace {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 16px;
+      align-items: start;
+    }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: 0 10px 24px rgba(24, 38, 28, 0.07);
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    textarea {
+      width: 100%;
+      min-height: 620px;
+      resize: vertical;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--ink);
+      background: #fbfcfa;
+      font: 14px/1.55 Consolas, monospace;
+      outline: none;
+    }
+    textarea:focus,
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(47, 125, 90, 0.14);
+    }
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
+    input[type="file"],
+    input[type="text"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fbfcfa;
+      color: var(--ink);
+      font: inherit;
+    }
+    button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 42px;
+      border: 0;
+      border-radius: 6px;
+      background: var(--accent);
+      color: white;
+      font: 700 15px/1 "Segoe UI", sans-serif;
+      cursor: pointer;
+    }
+    button:hover {
+      background: var(--accent-dark);
+    }
+    button.secondary {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+    button.secondary:hover {
+      background: #f0f3ee;
+    }
+    .status {
+      min-height: 38px;
+      padding: 10px;
+      border-radius: 6px;
+      background: #eff5ef;
+      color: #28563f;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+    .preview {
+      max-height: 360px;
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: #fbfcfa;
+      font-size: 13px;
+    }
+    .preview h1,
+    .preview h2,
+    .preview h3 {
+      margin: 12px 0 8px;
+    }
+    .preview p {
+      margin: 8px 0;
+    }
+    .preview code,
+    .preview pre {
+      background: var(--code);
+      border-radius: 4px;
+    }
+    .preview code {
+      padding: 1px 4px;
+    }
+    .preview pre {
+      padding: 8px;
+      overflow: auto;
+    }
+    @media (max-width: 900px) {
+      header,
+      .workspace {
+        display: block;
+      }
+      .panel {
+        margin-bottom: 16px;
+      }
+      textarea {
+        min-height: 420px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Markdown to DOCX</h1>
+        <div class="hint">Choose a Markdown file or paste content, then download a Word document.</div>
+      </div>
+        <div class="hint">Browser converter</div>
+    </header>
+
+    <div class="workspace">
+      <section class="panel">
+        <label for="markdown">Markdown</label>
+        <textarea id="markdown" spellcheck="false"># Wasteland Game Engineering Changes
+
+Paste Markdown here, or choose an .md file from the panel.
+
+- Headings are supported
+- Lists are supported
+- Fenced code blocks are supported
+- Simple tables are supported
+</textarea>
+      </section>
+
+      <aside class="panel controls">
+        <div>
+          <label for="file">Choose an .md file</label>
+          <input id="file" type="file" accept=".md,.markdown,text/markdown,text/plain">
+        </div>
+        <div>
+          <label for="filename">Output filename</label>
+          <input id="filename" type="text" value="document.docx">
+        </div>
+        <button id="download" type="button">Download DOCX</button>
+        <button id="clear" class="secondary" type="button">Clear content</button>
+        <div id="status" class="status">Waiting for input.</div>
+        <div>
+          <label>Preview</label>
+          <div id="preview" class="preview"></div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/docx@8.5.0/build/index.umd.js"></script>
+  <script>
+    const markdownEl = document.querySelector("#markdown");
+    const fileEl = document.querySelector("#file");
+    const filenameEl = document.querySelector("#filename");
+    const statusEl = document.querySelector("#status");
+    const previewEl = document.querySelector("#preview");
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, (ch) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      })[ch]);
+    }
+
+    function inlineHtml(text) {
+      return escapeHtml(text)
+        .replace(/`([^`]+)`/g, "<code>$1</code>")
+        .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+        .replace(/__([^_]+)__/g, "<strong>$1</strong>")
+        .replace(/\*([^*\n]+)\*/g, "<em>$1</em>")
+        .replace(/_([^_\n]+)_/g, "<em>$1</em>");
+    }
+
+    function updatePreview() {
+      const lines = markdownEl.value.replace(/\r\n/g, "\n").split("\n");
+      const html = [];
+      let inCode = false;
+      let code = [];
+      let inList = false;
+
+      function closeList() {
+        if (inList) {
+          html.push("</ul>");
+          inList = false;
+        }
+      }
+
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("```") || trimmed.startsWith("~~~")) {
+          if (inCode) {
+            html.push("<pre><code>" + escapeHtml(code.join("\n")) + "</code></pre>");
+            code = [];
+            inCode = false;
+          } else {
+            closeList();
+            inCode = true;
+          }
+          continue;
+        }
+        if (inCode) {
+          code.push(line);
+          continue;
+        }
+        if (!trimmed) {
+          closeList();
+          continue;
+        }
+        const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+        if (heading) {
+          closeList();
+          const level = Math.min(heading[1].length, 6);
+          html.push(`<h${level}>${inlineHtml(heading[2])}</h${level}>`);
+          continue;
+        }
+        const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
+        if (bullet) {
+          if (!inList) {
+            html.push("<ul>");
+            inList = true;
+          }
+          html.push("<li>" + inlineHtml(bullet[1]) + "</li>");
+          continue;
+        }
+        closeList();
+        html.push("<p>" + inlineHtml(trimmed) + "</p>");
+      }
+      closeList();
+      previewEl.innerHTML = html.join("");
+    }
+
+    function parseInlineRuns(text) {
+      const runs = [];
+      const regex = /(\[[^\]]+\]\([^)]+\)|`[^`]+`|\*\*[^*]+\*\*|__[^_]+__|\*[^*\n]+\*|_[^_\n]+_)/g;
+      let pos = 0;
+      let match;
+      while ((match = regex.exec(text))) {
+        if (match.index > pos) {
+          runs.push(new docx.TextRun(text.slice(pos, match.index)));
+        }
+        const token = match[0];
+        if (token.startsWith("[") && token.includes("](") && token.endsWith(")")) {
+          const body = token.slice(1, -1);
+          const split = body.indexOf("](");
+          runs.push(new docx.TextRun({
+            text: `${body.slice(0, split)} (${body.slice(split + 2)})`,
+            color: "225CA0",
+            underline: {}
+          }));
+        } else if (token.startsWith("`")) {
+          runs.push(new docx.TextRun({
+            text: token.slice(1, -1),
+            font: "Consolas",
+            size: 18,
+            color: "944C2B"
+          }));
+        } else if (token.startsWith("**") || token.startsWith("__")) {
+          runs.push(new docx.TextRun({ text: token.slice(2, -2), bold: true }));
+        } else {
+          runs.push(new docx.TextRun({ text: token.slice(1, -1), italics: true }));
+        }
+        pos = regex.lastIndex;
+      }
+      if (pos < text.length) {
+        runs.push(new docx.TextRun(text.slice(pos)));
+      }
+      return runs;
+    }
+
+    function tableCells(line) {
+      let value = line.trim();
+      if (value.startsWith("|")) value = value.slice(1);
+      if (value.endsWith("|")) value = value.slice(0, -1);
+      return value.split("|").map((cell) => cell.trim());
+    }
+
+    function isTableSeparator(line) {
+      return /^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)+\|?\s*$/.test(line);
+    }
+
+    function markdownToDocxChildren(markdown) {
+      const lines = markdown.replace(/\r\n/g, "\n").replace(/\r/g, "\n").split("\n");
+      const children = [];
+      let paragraph = [];
+      let i = 0;
+
+      function flushParagraph() {
+        if (paragraph.length) {
+          children.push(new docx.Paragraph({
+            children: parseInlineRuns(paragraph.join(" ").trim()),
+            spacing: { after: 160 }
+          }));
+          paragraph = [];
+        }
+      }
+
+      while (i < lines.length) {
+        const line = lines[i];
+        const trimmed = line.trim();
+        if (!trimmed) {
+          flushParagraph();
+          i++;
+          continue;
+        }
+        if (trimmed.startsWith("```") || trimmed.startsWith("~~~")) {
+          flushParagraph();
+          const fence = trimmed.slice(0, 3);
+          i++;
+          const code = [];
+          while (i < lines.length && !lines[i].trim().startsWith(fence)) {
+            code.push(lines[i]);
+            i++;
+          }
+          for (const codeLine of code.length ? code : [""]) {
+            children.push(new docx.Paragraph({
+              children: [new docx.TextRun({ text: codeLine, font: "Consolas", size: 18 })],
+              shading: { type: docx.ShadingType.CLEAR, fill: "F1EEE5" },
+              spacing: { after: 60 }
+            }));
+          }
+          i++;
+          continue;
+        }
+        if (i + 1 < lines.length && line.includes("|") && isTableSeparator(lines[i + 1])) {
+          flushParagraph();
+          const rows = [tableCells(line)];
+          i += 2;
+          while (i < lines.length && lines[i].includes("|") && lines[i].trim()) {
+            rows.push(tableCells(lines[i]));
+            i++;
+          }
+          const maxCols = Math.max(...rows.map((row) => row.length));
+          children.push(new docx.Table({
+            rows: rows.map((row) => new docx.TableRow({
+              children: Array.from({ length: maxCols }, (_, index) => new docx.TableCell({
+                children: [new docx.Paragraph({
+                  children: parseInlineRuns(row[index] || "")
+                })]
+              }))
+            })),
+            width: { size: 100, type: docx.WidthType.PERCENTAGE }
+          }));
+          continue;
+        }
+        const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+        if (heading) {
+          flushParagraph();
+          const level = Math.min(heading[1].length, 6);
+          children.push(new docx.Paragraph({
+            heading: docx.HeadingLevel[`HEADING_${level}`],
+            children: parseInlineRuns(heading[2]),
+            spacing: { before: 220, after: 120 }
+          }));
+          i++;
+          continue;
+        }
+        const bullet = line.match(/^\s*[-*+]\s+(.+)$/);
+        if (bullet) {
+          flushParagraph();
+          children.push(new docx.Paragraph({
+            children: parseInlineRuns(bullet[1]),
+            bullet: { level: 0 }
+          }));
+          i++;
+          continue;
+        }
+        const ordered = line.match(/^\s*\d+[.)]\s+(.+)$/);
+        if (ordered) {
+          flushParagraph();
+          children.push(new docx.Paragraph({
+            children: parseInlineRuns(ordered[1]),
+            numbering: { reference: "ordered-list", level: 0 }
+          }));
+          i++;
+          continue;
+        }
+        if (trimmed.startsWith(">")) {
+          flushParagraph();
+          children.push(new docx.Paragraph({
+            children: parseInlineRuns(trimmed.slice(1).trim()),
+            indent: { left: 360 },
+            italics: true
+          }));
+          i++;
+          continue;
+        }
+        paragraph.push(line);
+        i++;
+      }
+      flushParagraph();
+      return children;
+    }
+
+    async function downloadDocx() {
+      if (!window.docx) {
+        statusEl.textContent = "The docx library failed to load. Refresh while online or use the Python version.";
+        return;
+      }
+      const markdown = markdownEl.value.trim();
+      if (!markdown) {
+        statusEl.textContent = "No Markdown content.";
+        return;
+      }
+      const name = (filenameEl.value.trim() || "document.docx").replace(/[<>:"/\\|?*]/g, "_");
+      const outputName = name.toLowerCase().endsWith(".docx") ? name : `${name}.docx`;
+      const doc = new docx.Document({
+        numbering: {
+          config: [{
+            reference: "ordered-list",
+            levels: [{
+              level: 0,
+              format: "decimal",
+              text: "%1.",
+              alignment: docx.AlignmentType.LEFT
+            }]
+          }]
+        },
+        sections: [{
+          properties: {
+            page: {
+              margin: { top: 720, right: 720, bottom: 720, left: 720 }
+            }
+          },
+          children: markdownToDocxChildren(markdown)
+        }]
+      });
+      const blob = await docx.Packer.toBlob(doc);
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = outputName;
+      link.click();
+      URL.revokeObjectURL(url);
+      statusEl.textContent = `Generated ${outputName}`;
+    }
+
+    fileEl.addEventListener("change", async () => {
+      const file = fileEl.files[0];
+      if (!file) return;
+      markdownEl.value = await file.text();
+      filenameEl.value = file.name.replace(/\.(md|markdown)$/i, ".docx");
+      statusEl.textContent = `Loaded ${file.name}`;
+      updatePreview();
+    });
+    markdownEl.addEventListener("input", updatePreview);
+    document.querySelector("#download").addEventListener("click", downloadDocx);
+    document.querySelector("#clear").addEventListener("click", () => {
+      markdownEl.value = "";
+      statusEl.textContent = "Cleared.";
+      updatePreview();
+    });
+    updatePreview();
+  </script>
+</body>
+</html>
